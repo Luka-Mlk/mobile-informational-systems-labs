@@ -15,7 +15,7 @@ class RecipesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Апликација за рецепти 215046",
+      title: "Recipe app 215046",
       theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown.shade300)
       ),

@@ -58,7 +58,7 @@ class _MealListScreenState extends State<MealListScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Грешка при вчитување на рецептите: ${e.toString()}';
+        _error = 'Error fetching recipes: ${e.toString()}';
         _isLoading = false;
       });
     }
@@ -102,8 +102,8 @@ class _MealListScreenState extends State<MealListScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Пребарај рецепти',
-                hintText: 'Внесете име на рецепт...',
+                labelText: 'Search recipes',
+                hintText: 'Enter name of recipe...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -113,7 +113,6 @@ class _MealListScreenState extends State<MealListScreen> {
             ),
           ),
 
-          // Content Area (Loading, Error, or Grid)
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
@@ -129,7 +128,7 @@ class _MealListScreenState extends State<MealListScreen> {
                     ElevatedButton.icon(
                       onPressed: _fetchMeals, // Retry logic
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Обиди се повторно'),
+                      label: const Text('Try again'),
                     ),
                   ],
                 ),
@@ -139,8 +138,8 @@ class _MealListScreenState extends State<MealListScreen> {
                 ? Center(
               child: Text(
                 _searchController.text.isEmpty
-                    ? 'Нема пронајдени рецепти во оваа категорија.'
-                    : 'Нема рецепти што одговараат на критериумот "${_searchController.text}".',
+                    ? 'No recipes from this category'
+                    : 'No recipes that fit description: "${_searchController.text}".',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleMedium,
               ),
@@ -148,10 +147,10 @@ class _MealListScreenState extends State<MealListScreen> {
                 : GridView.builder(
               padding: const EdgeInsets.all(16.0),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, // 2 items per row
+                crossAxisCount: 2,
                 crossAxisSpacing: 16.0,
                 mainAxisSpacing: 16.0,
-                childAspectRatio: 0.8, // Adjust ratio for better card fit
+                childAspectRatio: 0.8,
               ),
               itemCount: _filteredMeals.length,
               itemBuilder: (context, index) {

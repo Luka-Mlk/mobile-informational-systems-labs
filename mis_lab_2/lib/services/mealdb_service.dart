@@ -4,7 +4,6 @@ import 'package:mis_lab_2/models/category_model.dart';
 import 'package:mis_lab_2/models/meal_model.dart';
 import 'package:mis_lab_2/models/meal_details_model.dart';
 
-/// Service class for fetching data from TheMealDB API.
 class MealDBService {
   static const String _baseUrl = 'www.themealdb.com';
   static const String _devKey = '1';

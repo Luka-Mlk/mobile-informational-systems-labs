@@ -58,7 +58,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
       });
     } catch (e) {
       setState(() {
-        _error = 'Грешка при вчитување на категориите: ${e.toString()}';
+        _error = 'Error fetching categories: ${e.toString()}';
         _isLoading = false;
       });
     }
@@ -160,7 +160,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Рецепт на Денот!',
+                          'Recipe of the day',
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -202,7 +202,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Категории на рецепти'),
+        title: const Text('Recipe categories'),
         centerTitle: true,
         elevation: 0,
       ),
@@ -216,8 +216,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                labelText: 'Пребарај категории',
-                hintText: 'Внесете име или опис...',
+                labelText: 'Search categories',
+                hintText: 'Enter name or description...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0),
@@ -243,7 +243,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                     ElevatedButton.icon(
                       onPressed: _fetchCategories,
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Обиди се повторно'),
+                      label: const Text('Try again'),
                     ),
                   ],
                 ),
@@ -253,8 +253,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                 ? Center(
               child: Text(
                 _searchController.text.isEmpty
-                    ? 'Нема пронајдени категории.'
-                    : 'Нема категории што одговараат на критериумот "${_searchController.text}".',
+                    ? 'No categories found.'
+                    : 'No categories fit the criteria "${_searchController.text}".',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.titleMedium,
               ),

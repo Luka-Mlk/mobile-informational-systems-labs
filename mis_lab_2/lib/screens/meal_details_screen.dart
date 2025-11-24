@@ -12,11 +12,11 @@ class MealDetailsScreen extends StatelessWidget {
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
-        throw Exception('Не може да се отвори URL: $url');
+        throw Exception('Cannot open URL: $url');
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Грешка при отворање на линкот: ${e.toString()}')),
+        SnackBar(content: Text('Error opening URL: ${e.toString()}')),
       );
     }
   }
@@ -77,7 +77,7 @@ class MealDetailsScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(32.0),
                 child: Text(
-                  'Грешка при вчитување на деталите: ${snapshot.error.toString()}',
+                  'Error fetching details: ${snapshot.error.toString()}',
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.red),
                 ),
@@ -90,7 +90,7 @@ class MealDetailsScreen extends StatelessWidget {
           if (details == null) {
             return const Center(
               child: Text(
-                'Детали за рецептот не се пронајдени.',
+                'No recipe details are found.',
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18),
               ),
@@ -124,13 +124,13 @@ class MealDetailsScreen extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildInfoChip(Icons.category, 'Категорија', details.category),
-                          _buildInfoChip(Icons.location_on, 'Област', details.area),
+                          _buildInfoChip(Icons.category, 'Category', details.category),
+                          _buildInfoChip(Icons.location_on, 'Origin', details.area),
                         ],
                       ),
                     ),
 
-                    _buildSectionTitle(context, 'Состојки', Icons.shopping_basket),
+                    _buildSectionTitle(context, 'Ingredients', Icons.shopping_basket),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -145,7 +145,7 @@ class MealDetailsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    _buildSectionTitle(context, 'Инструкции', Icons.menu_book),
+                    _buildSectionTitle(context, 'Instructions', Icons.menu_book),
 
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -162,7 +162,7 @@ class MealDetailsScreen extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: () => _launchUrl(context, details.youtubeLink!),
                           icon: const Icon(Icons.smart_display, color: Colors.red),
-                          label: const Text('Погледни видео рецепт'),
+                          label: const Text('View video'),
                           style: ElevatedButton.styleFrom(
                             minimumSize: const Size.fromHeight(50),
                             backgroundColor: Colors.white,
