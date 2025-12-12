@@ -3,6 +3,7 @@ import 'package:mis_lab_2/models/category_model.dart';
 import 'package:mis_lab_2/models/meal_model.dart';
 import 'package:mis_lab_2/services/mealdb_service.dart';
 import 'package:mis_lab_2/widgets/meal_card_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MealListScreen extends StatefulWidget {
   const MealListScreen({super.key});
@@ -19,6 +20,9 @@ class _MealListScreenState extends State<MealListScreen> {
   bool _isLoading = true;
   String? _error;
 
+  Set<String> _favoriteMealIds = {};
+  static const String _FAVORITES_KEY = 'favoriteMealIds';
+
   final TextEditingController _searchController = TextEditingController();
 
   late Category _category;
@@ -30,6 +34,7 @@ class _MealListScreenState extends State<MealListScreen> {
     if (!_isDataInitialized) {
       _category = ModalRoute.of(context)!.settings.arguments as Category;
       _fetchMeals();
+      _loadFavorites(); // Load favorite state
       _searchController.addListener(_filterMeals);
       _isDataInitialized = true;
     }
@@ -40,6 +45,41 @@ class _MealListScreenState extends State<MealListScreen> {
     _searchController.removeListener(_filterMeals);
     _searchController.dispose();
     super.dispose();
+  }
+
+  /// Loads favorite meal IDs from SharedPreferences
+  Future<void> _loadFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final favoriteList = prefs.getStringList(_FAVORITES_KEY) ?? [];
+      setState(() {
+        _favoriteMealIds = favoriteList.toSet();
+      });
+    } catch (e) {
+      print('Error loading favorites: $e');
+    }
+  }
+
+  /// Saves favorite meal IDs to SharedPreferences
+  Future<void> _saveFavorites() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setStringList(_FAVORITES_KEY, _favoriteMealIds.toList());
+    } catch (e) {
+      print('Error saving favorites: $e');
+    }
+  }
+
+  /// Toggles the favorite status of a meal
+  void _toggleFavorite(String mealId) {
+    setState(() {
+      if (_favoriteMealIds.contains(mealId)) {
+        _favoriteMealIds.remove(mealId);
+      } else {
+        _favoriteMealIds.add(mealId);
+      }
+    });
+    _saveFavorites();
   }
 
   /// Get meals
@@ -72,7 +112,6 @@ class _MealListScreenState extends State<MealListScreen> {
         _filteredMeals = _allMeals;
       } else {
         _filteredMeals = _allMeals.where((meal) {
-          // Meal name contains query
           return meal.name.toLowerCase().contains(query);
         }).toList();
       }
@@ -80,7 +119,6 @@ class _MealListScreenState extends State<MealListScreen> {
   }
 
   void _navigateToDetailsScreen(String mealId) {
-    // Navigate to the actual details screen, passing the meal ID.
     Navigator.of(context).pushNamed(
       '/details',
       arguments: mealId,
@@ -96,7 +134,6 @@ class _MealListScreenState extends State<MealListScreen> {
       ),
       body: Column(
         children: [
-          // Search Bar
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextField(
@@ -126,7 +163,7 @@ class _MealListScreenState extends State<MealListScreen> {
                     Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.red)),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: _fetchMeals, // Retry logic
+                      onPressed: _fetchMeals,
                       icon: const Icon(Icons.refresh),
                       label: const Text('Try again'),
                     ),
@@ -158,6 +195,8 @@ class _MealListScreenState extends State<MealListScreen> {
                 return MealCardWidget(
                   meal: meal,
                   onTap: () => _navigateToDetailsScreen(meal.id),
+                  isFavorite: _favoriteMealIds.contains(meal.id),
+                  onToggleFavorite: () => _toggleFavorite(meal.id),
                 );
               },
             ),

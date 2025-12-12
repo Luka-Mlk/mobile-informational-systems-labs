@@ -6,10 +6,14 @@ class MealCardWidget extends StatelessWidget {
     super.key,
     required this.meal,
     required this.onTap,
+    required this.isFavorite,
+    required this.onToggleFavorite,
   });
 
   final Meal meal;
   final VoidCallback onTap;
+  final bool isFavorite;
+  final VoidCallback onToggleFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -28,14 +32,44 @@ class MealCardWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
-                child: Image.network(
-                  meal.thumbnailDefault,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                  const Center(child: Icon(Icons.broken_image, size: 40)),
-                ),
+              child: Stack(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(16.0)),
+                    child: Image.network(
+                      meal.thumbnailDefault,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                      const Center(child: Icon(Icons.broken_image, size: 40)),
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 4),
+                          ]
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          isFavorite ? Icons.star : Icons.star_border,
+                          color: isFavorite ? Colors.amberAccent : Colors.white,
+                          size: 24,
+                        ),
+                        onPressed: (
+                            onToggleFavorite
+                        ),
+                        padding: EdgeInsets.zero,
+                        constraints: const BoxConstraints(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             Padding(
